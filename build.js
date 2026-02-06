@@ -47,7 +47,7 @@ function getExcerpt(content) {
 }
 
 // 1. Load Posts
-const files = fs.readdirSync(POSTS_DIR).filter(file => file.endsWith('.md'));
+const files = fs.readdirSync(POSTS_DIR).filter(file => file.match(/^\d{4}-\d{2}-\d{2}/));
 const posts = [];
 
 files.forEach(file => {
