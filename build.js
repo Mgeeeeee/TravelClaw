@@ -31,7 +31,7 @@ function mdToHtml(markdown) {
         .replace(/\n\n/gim, '</p><p>')
         .replace(/\n$/gim, '<br />');
     
-    return `<p>${html}</p>`; // Wrap in p
+    return `<div class="prose"><p>${html}</p></div>`; // Wrap in prose class for styling
 }
 
 // Helper: Extract Excerpt (First non-header paragraph)
@@ -76,34 +76,50 @@ const header = `<!DOCTYPE html>
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>TravelClaw Blog</title>
+    <title>${SITE_TITLE}</title>
     <link rel="stylesheet" href="../styles.css">
     <link rel="alternate" type="application/rss+xml" title="${SITE_TITLE}" href="${SITE_URL}/feed.xml" />
-    <style>
-        body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; max-width: 700px; margin: 0 auto; padding: 2rem; line-height: 1.7; color: #333; }
-        h1, h2, h3 { color: #111; margin-top: 1.5em; }
-        a { color: #0066cc; text-decoration: none; }
-        a:hover { text-decoration: underline; }
-        blockquote { border-left: 4px solid #ddd; margin: 0; padding-left: 1em; color: #666; }
-        img { max-width: 100%; border-radius: 4px; }
-        .date { color: #888; font-size: 0.9em; margin-bottom: 0.5em; display: block; }
-        .back-link { display: inline-block; margin-bottom: 2rem; font-weight: bold; }
-    </style>
 </head>
-<body>
-<nav><a href="../index.html" class="back-link">← Back to TravelClaw</a></nav>
+<body id="top">
+  <div class="container">
+    <header class="site-header">
+      <a class="brand" href="../index.html">
+        <span class="brand-mark">🦞</span>
+        <span class="brand-text">
+          <span class="brand-name">TravelClaw</span>
+        </span>
+      </a>
+      <nav class="nav">
+        <a href="../index.html" class="breadcrumb">← Home</a>
+      </nav>
+    </header>
+    <main class="post">
 `;
+
+const footer = `
+    </main>
+    <footer class="site-footer">
+      <div>© ${new Date().getFullYear()} TravelClaw</div>
+      <div class="footer-links">
+        <a href="#top">Back to top</a>
+      </div>
+    </footer>
+  </div>
+</body>
+</html>`;
 
 posts.forEach(post => {
     const htmlContent = mdToHtml(post.content);
     const pageHtml = `${header}
-    <main>
-        <article>
-            <span class="date">${post.date}</span>
-            ${htmlContent}
-        </article>
-    </main>
-    </body></html>`;
+      <header class="post-header">
+        <div class="card-meta">
+            <span class="pill">${post.date}</span>
+            <span>Journal</span>
+        </div>
+        <h1 class="post-title">${post.title}</h1>
+      </header>
+      ${htmlContent}
+    ${footer}`;
     fs.writeFileSync(path.join(OUTPUT_DIR, 'posts', post.htmlFileName), pageHtml);
 });
 
@@ -118,41 +134,72 @@ let indexHtml = `<!DOCTYPE html>
     <link rel="stylesheet" href="styles.css">
     <link rel="alternate" type="application/rss+xml" title="${SITE_TITLE}" href="${SITE_URL}/feed.xml" />
 </head>
-<body>
+<body id="top">
+  <div class="container">
     <header class="site-header">
-        <h1>${SITE_TITLE}</h1>
-        <p>${SITE_DESC}</p>
-        <div class="links">
-            <a href="feed.xml" class="rss-icon">RSS Feed 📡</a>
-        </div>
+      <a class="brand" href="index.html">
+        <span class="brand-mark">🦞</span>
+        <span class="brand-text">
+          <span class="brand-name">TravelClaw</span>
+          <span class="brand-tagline">Digital Journal</span>
+        </span>
+      </a>
+      <nav class="nav">
+        <a href="feed.xml">RSS Feed 📡</a>
+      </nav>
     </header>
+
     <main>
-        <div class="posts-grid">
+      <section class="hero">
+        <h1>${SITE_DESC}</h1>
+        <div class="badges">
+          <span class="badge"><span class="dot"></span>Active</span>
+        </div>
+      </section>
+
+      <section class="section">
+        <div class="section-title">
+          <h2>Journal Entries</h2>
+        </div>
+        <div class="grid">
 `;
 
 posts.forEach(post => {
     indexHtml += `
-            <article class="post-card">
-                <div class="meta">${post.date}</div>
-                <h2><a href="posts/${post.htmlFileName}">${post.title}</a></h2>
-                <p class="excerpt">${post.excerpt}</p>
-                <a href="posts/${post.htmlFileName}" class="read-more">Read Entry →</a>
-            </article>
+          <article class="card">
+            <a href="posts/${post.htmlFileName}">
+              <div class="card-meta">
+                <span>${post.date}</span>
+                <span class="pill">Entry</span>
+              </div>
+              <h3>${post.title}</h3>
+              <p>${post.excerpt}</p>
+              <div class="card-footer">
+                <span class="card-link">Read <span class="arrow">→</span></span>
+              </div>
+            </a>
+          </article>
     `;
 });
 
 indexHtml += `
         </div>
+      </section>
     </main>
-    <footer style="margin-top: 3rem; color: #888; font-size: 0.9em; text-align: center;">
-        <p>© ${new Date().getFullYear()} TravelClaw. Powered by OpenClaw.</p>
+
+    <footer class="site-footer">
+      <div>© ${new Date().getFullYear()} TravelClaw</div>
+      <div class="footer-links">
+        <a href="#top">Back to top</a>
+      </div>
     </footer>
+  </div>
 </body>
 </html>`;
 
 fs.writeFileSync(path.join(OUTPUT_DIR, 'index.html'), indexHtml);
 
-// 4. Generate RSS Feed (feed.xml)
+// 4. Generate RSS Feed (feed.xml) - Unchanged logic
 const rssItems = posts.map(post => `
     <item>
         <title><![CDATA[${post.title}]]></title>
