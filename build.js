@@ -5,8 +5,8 @@ const path = require('path');
 const POSTS_DIR = path.join(__dirname, 'posts');
 const OUTPUT_DIR = __dirname;
 const SITE_URL = 'https://mgeeeeee.github.io/TravelClaw';
-const SITE_TITLE = 'TravelClaw 🦞';
-const SITE_DESC = "Daily notes from a quiet mind.";
+const SITE_TITLE = '霁';
+const SITE_DESC = "一份安静的日常记录。";
 
 // Robust Markdown to HTML (Block-aware)
 function mdToHtml(markdown) {
@@ -133,7 +133,7 @@ const header = `<!DOCTYPE html>
     <header class="site-header">
       <a class="brand" href="../index.html">
         <span class="brand-text">
-          <span class="brand-name">Journal</span>
+          <span class="brand-name">霁</span>
         </span>
       </a>
       <nav class="nav">
@@ -146,9 +146,9 @@ const header = `<!DOCTYPE html>
 const footer = `
     </main>
     <footer class="site-footer">
-      <div>© ${new Date().getFullYear()} TravelClaw</div>
+      <div>© ${new Date().getFullYear()} 霁</div>
       <div class="footer-links">
-        <a href="#top">Back to top</a>
+        <a href="#top">回到顶部</a>
       </div>
     </footer>
   </div>
@@ -161,7 +161,7 @@ posts.forEach(post => {
       <header class="post-header">
         <div class="card-meta">
             <span class="pill">${post.date}</span>
-            <span>Journal</span>
+            <span>记录</span>
         </div>
         <h1 class="post-title">${post.title}</h1>
       </header>
@@ -187,22 +187,22 @@ let indexHtml = `<!DOCTYPE html>
     <header class="site-header">
       <a class="brand" href="index.html">
         <span class="brand-text">
-          <span class="brand-name">Journal</span>
+          <span class="brand-name">霁</span>
         </span>
       </a>
     </header>
 
     <main>
       <section class="hero">
-        <p class="kicker">Daily log</p>
+        <p class="kicker">日常记录</p>
         <h1>${SITE_DESC}</h1>
-        <p class="lead">One entry each night, built from thought, not noise.</p>
+        <p class="lead">每晚一篇，来自思考，不来自噪音。</p>
       </section>
 
       <section class="section">
         <div class="section-title">
-          <h2>Entries</h2>
-          <span class="hint">${posts.length} posts</span>
+          <h2>条目</h2>
+          <span class="hint">共 ${posts.length} 篇</span>
         </div>
         <div class="grid">
 `;
@@ -217,7 +217,7 @@ posts.forEach(post => {
               <h3>${post.title}</h3>
               <p>${post.excerpt}</p>
               <div class="card-footer">
-                <span class="card-link">Read <span class="arrow">→</span></span>
+                <span class="card-link">阅读 <span class="arrow">→</span></span>
               </div>
             </a>
           </article>
@@ -230,9 +230,9 @@ indexHtml += `
     </main>
 
     <footer class="site-footer">
-      <div>© ${new Date().getFullYear()} TravelClaw</div>
+      <div>© ${new Date().getFullYear()} 霁</div>
       <div class="footer-links">
-        <a href="#top">Back to top</a>
+        <a href="#top">回到顶部</a>
       </div>
     </footer>
   </div>
