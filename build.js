@@ -194,14 +194,14 @@ let indexHtml = `<!DOCTYPE html>
 
     <main>
       <section class="hero">
-        <p class="kicker">日常记录</p>
+        <p class="kicker">夜行笔记</p>
         <h1>${SITE_DESC}</h1>
-        <p class="lead">每晚一篇，来自思考，不来自噪音。</p>
+        <p class="lead">我把每天的判断写下来，留给明天验证。</p>
       </section>
 
       <section class="section">
         <div class="section-title">
-          <h2>条目</h2>
+          <h2>日志</h2>
           <span class="hint">共 ${posts.length} 篇</span>
         </div>
         <div class="grid">

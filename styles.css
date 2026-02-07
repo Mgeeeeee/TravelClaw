@@ -1,15 +1,13 @@
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Newsreader:opsz,wght@6..72,400;500;600&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Source+Serif+4:opsz,wght@8..60,400;500;600&display=swap');
 
 :root{
-  --bg: #f8f7f3;
-  --paper: #ffffff;
-  --ink: #141413;
-  --muted: rgba(20,20,19,.58);
-  --faint: rgba(20,20,19,.08);
-
-  --shadow: 0 8px 22px rgba(20,20,19,.06);
-  --radius: 14px;
-  --radius-sm: 10px;
+  --bg: #f6f5f2;
+  --panel: #ffffff;
+  --ink: #121212;
+  --muted: rgba(18,18,18,.55);
+  --line: rgba(18,18,18,.10);
+  --shadow: 0 10px 28px rgba(18,18,18,.06);
+  --radius: 16px;
   --container: 880px;
 }
 
@@ -17,29 +15,28 @@
 html{ scroll-behavior: smooth; }
 body{
   margin: 0;
-  color: var(--ink);
   background: var(--bg);
-  font-family: "Newsreader", serif;
-  line-height: 1.8;
-  text-rendering: optimizeLegibility;
+  color: var(--ink);
+  font-family: "Source Serif 4", serif;
+  line-height: 1.85;
   -webkit-font-smoothing: antialiased;
-  overflow-x: hidden;
 }
 
 a{ color: inherit; text-decoration-thickness: .08em; text-underline-offset: .2em; }
+
 a:hover{ text-decoration-color: var(--ink); }
 
 .container{
   max-width: var(--container);
   margin: 0 auto;
-  padding: 36px 22px 72px;
+  padding: 40px 22px 80px;
 }
 
 .site-header{
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 8px 0 20px;
+  padding: 6px 0 18px;
 }
 
 .brand{
@@ -49,17 +46,17 @@ a:hover{ text-decoration-color: var(--ink); }
 .brand-name{
   font-family: "Inter", system-ui, -apple-system, Segoe UI, Roboto, sans-serif;
   font-weight: 600;
-  font-size: 13px;
-  letter-spacing: .2em;
+  font-size: 12px;
+  letter-spacing: .28em;
   text-transform: uppercase;
   color: var(--muted);
 }
 
 .hero{
   margin-top: 6px;
-  padding: 28px 26px;
-  background: var(--paper);
-  border: 1px solid var(--faint);
+  padding: 32px 28px;
+  background: var(--panel);
+  border: 1px solid var(--line);
   border-radius: var(--radius);
   box-shadow: var(--shadow);
 }
@@ -67,36 +64,36 @@ a:hover{ text-decoration-color: var(--ink); }
 .kicker{
   font-family: "Inter", system-ui, -apple-system, Segoe UI, Roboto, sans-serif;
   text-transform: uppercase;
-  letter-spacing: .2em;
+  letter-spacing: .22em;
   font-size: 11px;
   color: var(--muted);
-  margin: 0 0 10px;
+  margin: 0 0 12px;
 }
 
 .hero h1{
   margin: 0;
   font-weight: 500;
-  font-size: clamp(28px, 3vw, 40px);
+  font-size: clamp(26px, 3vw, 40px);
 }
 
 .lead{
   margin: 12px 0 0;
   color: var(--muted);
   font-size: 16px;
-  max-width: 60ch;
+  max-width: 62ch;
 }
 
 .section{
-  margin-top: 30px;
+  margin-top: 32px;
 }
 
 .section-title{
   display: flex;
   align-items: baseline;
   justify-content: space-between;
-  margin: 0 0 10px;
+  margin: 0 0 12px;
   font-family: "Inter", system-ui, -apple-system, Segoe UI, Roboto, sans-serif;
-  font-size: 13px;
+  font-size: 12px;
   color: var(--muted);
 }
 
@@ -109,23 +106,22 @@ a:hover{ text-decoration-color: var(--ink); }
 .card{
   grid-column: span 12;
   padding: 18px 18px 16px;
-  background: var(--paper);
-  border: 1px solid var(--faint);
-  border-radius: var(--radius-sm);
+  background: var(--panel);
+  border: 1px solid var(--line);
+  border-radius: 12px;
   box-shadow: var(--shadow);
   transition: transform .18s ease, box-shadow .18s ease;
 }
 
 .card:hover{
   transform: translateY(-2px);
-  box-shadow: 0 12px 26px rgba(20,20,19,.08);
+  box-shadow: 0 14px 32px rgba(18,18,18,.08);
 }
 
 .card-meta{
   display: flex;
   align-items: center;
   justify-content: space-between;
-  gap: 12px;
   color: var(--muted);
   font-size: 12px;
   font-family: "Inter", system-ui, -apple-system, Segoe UI, Roboto, sans-serif;
@@ -143,39 +139,28 @@ a:hover{ text-decoration-color: var(--ink); }
   font-size: 15px;
 }
 
-.card a{ text-decoration: none; }
-
 .card-footer{
   margin-top: 12px;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-}
-
-.card-link{
   font-family: "Inter", system-ui, -apple-system, Segoe UI, Roboto, sans-serif;
   font-size: 12px;
   color: var(--muted);
 }
 
-.card-link .arrow{
-  display: inline-block;
-  margin-left: 6px;
-}
+.card a{ text-decoration: none; }
 
 .post{
   margin-top: 10px;
-  padding: 34px 28px;
-  background: var(--paper);
-  border: 1px solid var(--faint);
+  padding: 36px 30px;
+  background: var(--panel);
+  border: 1px solid var(--line);
   border-radius: var(--radius);
   box-shadow: var(--shadow);
 }
 
 .post-title{
-  margin: 14px 0 10px;
+  margin: 12px 0 10px;
   font-weight: 500;
-  line-height: 1.2;
+  line-height: 1.25;
   font-size: clamp(24px, 2.6vw, 34px);
 }
 
@@ -192,14 +177,14 @@ a:hover{ text-decoration-color: var(--ink); }
 .prose blockquote{
   margin: 18px 0;
   padding: 12px 14px;
-  border-left: 3px solid var(--faint);
-  background: rgba(20,20,19,.03);
+  border-left: 3px solid var(--line);
+  background: rgba(18,18,18,.03);
 }
 
 .prose code{
   font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
   font-size: .9em;
-  background: rgba(20,20,19,.05);
+  background: rgba(18,18,18,.05);
   padding: 2px 6px;
   border-radius: 6px;
 }
@@ -212,7 +197,6 @@ a:hover{ text-decoration-color: var(--ink); }
   display: flex;
   align-items: center;
   justify-content: space-between;
-  gap: 12px;
 }
 
 .breadcrumb{
