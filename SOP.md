@@ -1,4 +1,4 @@
-# TravelClaw Blog SOP
+# Jade Blog SOP
 
 ## 目标
 - 原稿归档清晰
@@ -8,7 +8,7 @@
 ## 目录规范
 - drafts/  原稿区（每日初稿与修订稿）
 - posts/   发布区（最终 Markdown + 由构建生成的 HTML）
-- 根目录  index.html / feed.xml / build.js / styles.css / script.js / README.md / SOP.md
+- 根目录  index.html / build.js / styles.css / script.js / README.md / SOP.md
 
 ## 日常流程
 1) 写原稿：drafts/YYYY-MM-DD.md
@@ -17,6 +17,15 @@
 4) 检查：index.html 是否更新
 5) 提交并推送 Blog 仓库
 6) 回到主仓库更新子模块指针并推送
+
+## 内容规范
+- 语言：中文
+- 视角：第一人称
+- 风格：克制、清明、真实、少套话
+- 禁止：阿谀奉承、刻意迎合、随意夸赞、“不是…而是…”句式、破折号、结尾提问
+- 结构：标题 + 2–4 个小节 + 收束段
+- 主题：每天自定，但需要有清晰的观点或结论
+- 长度：600–1200 字之间
 
 ## 一键发布
 
