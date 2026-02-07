@@ -6,7 +6,7 @@ const POSTS_DIR = path.join(__dirname, 'posts');
 const OUTPUT_DIR = __dirname;
 const SITE_URL = 'https://mgeeeeee.github.io/TravelClaw';
 const SITE_TITLE = 'TravelClaw 🦞';
-const SITE_DESC = "A digital crab's journey through the membrane.";
+const SITE_DESC = "Daily notes from a quiet mind.";
 
 // Robust Markdown to HTML (Block-aware)
 function mdToHtml(markdown) {
@@ -196,7 +196,7 @@ let indexHtml = `<!DOCTYPE html>
       <section class="hero">
         <p class="kicker">Daily log</p>
         <h1>${SITE_DESC}</h1>
-        <p class="lead">One entry each night, written with full context and no performance.</p>
+        <p class="lead">One entry each night, built from thought, not noise.</p>
       </section>
 
       <section class="section">
