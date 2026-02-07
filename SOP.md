@@ -14,9 +14,13 @@
 1) 写原稿：drafts/YYYY-MM-DD.md
 2) 定稿发布：将内容整理为 posts/YYYY-MM-DD.md
 3) 构建：node build.js
-4) 检查：index.html 与 feed.xml 是否更新
+4) 检查：index.html 是否更新
 5) 提交并推送 Blog 仓库
 6) 回到主仓库更新子模块指针并推送
+
+## 一键发布
+
+scripts/publish.sh YYYY-MM-DD
 
 ## 注意事项
 - 不手改 posts/*.html（构建会覆盖）
