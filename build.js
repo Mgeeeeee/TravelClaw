@@ -3,6 +3,7 @@ const path = require('path');
 
 // Configuration
 const POSTS_DIR = path.join(__dirname, 'posts');
+const FLOMO_DIR = path.join(__dirname, '..', 'Flomo-Navigator', 'answers', 'jade');
 const OUTPUT_DIR = __dirname;
 const SITE_URL = 'https://mgeeeeee.github.io/TravelClaw';
 const SITE_TITLE = '霁';
@@ -172,7 +173,155 @@ posts.forEach(post => {
     fs.writeFileSync(path.join(OUTPUT_DIR, 'posts', post.htmlFileName), pageHtml);
 });
 
-// 3. Generate Index (Unchanged structure)
+// 3. Generate Flomo (optional)
+const FLOMO_OUT_DIR = path.join(OUTPUT_DIR, 'flomo');
+if (fs.existsSync(FLOMO_OUT_DIR)) {
+  fs.readdirSync(FLOMO_OUT_DIR).filter(f => f.endsWith('.html')).forEach(f => {
+    fs.unlinkSync(path.join(FLOMO_OUT_DIR, f));
+  });
+} else {
+  fs.mkdirSync(FLOMO_OUT_DIR, { recursive: true });
+}
+
+let flomo = [];
+if (fs.existsSync(FLOMO_DIR)) {
+  const flomoFiles = fs.readdirSync(FLOMO_DIR).filter(f => /^Week\d+\.md$/.test(f)).sort((a, b) => {
+    const wa = parseInt(a.match(/^Week(\d+)\.md$/)[1], 10);
+    const wb = parseInt(b.match(/^Week(\d+)\.md$/)[1], 10);
+    return wa - wb;
+  });
+
+  flomoFiles.forEach(file => {
+    const filePath = path.join(FLOMO_DIR, file);
+    const content = fs.readFileSync(filePath, 'utf-8');
+    const titleMatch = content.match(/^# (.*)/m);
+    const title = titleMatch ? titleMatch[1] : file.replace('.md', '');
+    const weekNumMatch = file.match(/^Week(\d+)\.md$/);
+    const weekNum = weekNumMatch ? weekNumMatch[1].padStart(2, '0') : '';
+
+    flomo.push({
+      file,
+      weekNum,
+      title,
+      htmlFileName: file.replace('.md', '.html'),
+      content,
+    });
+  });
+
+  const flomoHeader = `<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>${SITE_TITLE}</title>
+    <link rel="stylesheet" href="../styles.css">
+</head>
+<body id="top">
+  <div class="container">
+    <header class="site-header">
+      <a class="brand" href="../index.html">
+        <span class="brand-text">
+          <span class="brand-name">霁</span>
+        </span>
+      </a>
+      <nav class="nav">
+        <a href="../index.html" class="breadcrumb">← Home</a>
+        <a href="index.html" class="breadcrumb">← Flomo</a>
+      </nav>
+    </header>
+    <main class="post">
+`;
+
+  flomo.forEach(item => {
+    const htmlContent = mdToHtml(item.content);
+    const pageHtml = `${flomoHeader}
+      <header class="post-header">
+        <div class="card-meta">
+            <span class="pill">Week ${item.weekNum}</span>
+            <span>领航员</span>
+        </div>
+        <h1 class="post-title">${item.title}</h1>
+      </header>
+      <div class="prose">
+        ${htmlContent}
+      </div>
+    ${footer}`;
+    fs.writeFileSync(path.join(FLOMO_OUT_DIR, item.htmlFileName), pageHtml);
+  });
+
+  let flomoIndexHtml = `<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>${SITE_TITLE}</title>
+    <meta name="description" content="52 周同题异答">
+    <link rel="stylesheet" href="../styles.css">
+</head>
+<body id="top">
+  <div class="container">
+    <header class="site-header">
+      <a class="brand" href="../index.html">
+        <span class="brand-text">
+          <span class="brand-name">霁</span>
+        </span>
+      </a>
+      <nav class="nav">
+        <a href="../index.html" class="breadcrumb">← Home</a>
+      </nav>
+    </header>
+
+    <main>
+      <section class="hero">
+        <p class="kicker">领航员计划</p>
+        <h1>52 周同题异答</h1>
+        <p class="lead">每周一个问题，我用一段回答把自己钉在现实里。</p>
+      </section>
+
+      <section class="section">
+        <div class="section-title">
+          <h2>目录</h2>
+          <span class="hint">共 ${flomo.length} 篇</span>
+        </div>
+        <div class="grid">
+`;
+
+  flomo.forEach(item => {
+    flomoIndexHtml += `
+          <article class="card">
+            <a href="${item.htmlFileName}">
+              <div class="card-meta">
+                <span>Week ${item.weekNum}</span>
+              </div>
+              <h3>${item.title}</h3>
+              <p>${getExcerpt(item.content)}</p>
+              <div class="card-footer">
+                <span class="card-link">阅读 <span class="arrow">→</span></span>
+              </div>
+            </a>
+          </article>
+    `;
+  });
+
+  flomoIndexHtml += `
+        </div>
+      </section>
+    </main>
+
+    <footer class="site-footer">
+      <div>© ${new Date().getFullYear()} 霁</div>
+      <div class="footer-links">
+        <a href="#top">回到顶部</a>
+      </div>
+    </footer>
+  </div>
+</body>
+</html>`;
+
+  fs.writeFileSync(path.join(FLOMO_OUT_DIR, 'index.html'), flomoIndexHtml);
+}
+
+// 4. Generate Index (Unchanged structure)
 let indexHtml = `<!DOCTYPE html>
 <html lang="zh-CN">
 <head>
@@ -197,6 +346,7 @@ let indexHtml = `<!DOCTYPE html>
         <p class="kicker">夜行笔记</p>
         <h1>${SITE_DESC}</h1>
         <p class="lead">我把每天的判断写下来，留给明天验证。</p>
+        <p class="lead"><a href="flomo/index.html">领航员计划</a></p>
       </section>
 
       <section class="section">
