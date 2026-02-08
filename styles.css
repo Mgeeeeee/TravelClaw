@@ -11,6 +11,27 @@
   --container: 880px;
 }
 
+@media (prefers-color-scheme: dark){
+  :root{
+    --bg: #0f1115;
+    --panel: #151922;
+    --ink: rgba(255,255,255,.92);
+    --muted: rgba(255,255,255,.62);
+    --line: rgba(255,255,255,.10);
+    --shadow: 0 12px 34px rgba(0,0,0,.38);
+  }
+
+  a:hover{ text-decoration-color: var(--ink); }
+
+  .prose blockquote{
+    background: rgba(255,255,255,.04);
+  }
+
+  .prose code{
+    background: rgba(255,255,255,.08);
+  }
+}
+
 *{ box-sizing: border-box; }
 html{ scroll-behavior: smooth; }
 body{
