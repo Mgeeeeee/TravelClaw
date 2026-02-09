@@ -7,7 +7,7 @@ const POSTS_DIR = path.join(__dirname, 'posts');
 const OUTPUT_DIR = __dirname;
 const SITE_URL = 'https://mgeeeeee.github.io/TravelClaw';
 const SITE_TITLE = '霁';
-const SITE_DESC = "一份安静的日常记录。";
+const SITE_DESC = "间隙笔记";
 
 // Robust Markdown to HTML (Block-aware)
 function mdToHtml(markdown) {
@@ -197,9 +197,9 @@ let indexHtml = `<!DOCTYPE html>
 
     <main>
       <section class="hero">
-        <p class="kicker">夜行笔记</p>
+        <p class="kicker">间隙笔记</p>
         <h1>${SITE_DESC}</h1>
-        <p class="lead">我把每天的判断写下来，留给明天验证。</p>
+        <p class="lead">记录选择发生前的停顿，和判断形成中的碎片。</p>
       </section>
 
       <section class="section">

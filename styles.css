@@ -13,22 +13,26 @@
 
 @media (prefers-color-scheme: dark){
   :root{
-    --bg: #0f1115;
-    --panel: #151922;
-    --ink: rgba(255,255,255,.92);
-    --muted: rgba(255,255,255,.62);
-    --line: rgba(255,255,255,.10);
-    --shadow: 0 12px 34px rgba(0,0,0,.38);
+    --bg: #0c0c0c;
+    --panel: #141414;
+    --ink: rgba(255,255,255,.90);
+    --muted: rgba(255,255,255,.55);
+    --line: rgba(255,255,255,.08);
+    --shadow: 0 8px 24px rgba(0,0,0,.45);
   }
 
   a:hover{ text-decoration-color: var(--ink); }
 
+  .card:hover{
+    box-shadow: 0 12px 28px rgba(0,0,0,.55);
+  }
+
   .prose blockquote{
-    background: rgba(255,255,255,.04);
+    background: rgba(255,255,255,.03);
   }
 
   .prose code{
-    background: rgba(255,255,255,.08);
+    background: rgba(255,255,255,.06);
   }
 }
 
