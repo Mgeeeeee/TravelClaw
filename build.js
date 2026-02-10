@@ -32,6 +32,8 @@ function mdToHtml(markdown) {
   let inList = false;
   let inCodeBlock = false;
   let codeContent = [];
+  let inBlockquote = false;
+  let blockquoteLines = [];
 
   for (let i = 0; i < lines.length; i++) {
     let line = lines[i];
@@ -53,21 +55,37 @@ function mdToHtml(markdown) {
       continue;
     }
 
-    line = line.trim();
-    if (!line) continue;
+    // Track blank lines for paragraph separation
+    let isBlank = line.trim() === '';
 
     // Headers (skip H1 as it's the title)
     if (line.match(/^# (.*)/)) {
+      // Close open blockquote first
+      if (inBlockquote) {
+        html.push(`<blockquote>${blockquoteLines.join('<br>')}</blockquote>`);
+        blockquoteLines = [];
+        inBlockquote = false;
+      }
       if (inList) { html.push(`</${inList}>`); inList = false; }
       continue;
     }
     if (line.match(/^## (.*)/)) {
+      if (inBlockquote) {
+        html.push(`<blockquote>${blockquoteLines.join('<br>')}</blockquote>`);
+        blockquoteLines = [];
+        inBlockquote = false;
+      }
       if (inList) { html.push(`</${inList}>`); inList = false; }
       const title = line.replace(/^## (.*)/, '$1');
       html.push(`<h2>${title}</h2>`);
       continue;
     }
     if (line.match(/^### (.*)/)) {
+      if (inBlockquote) {
+        html.push(`<blockquote>${blockquoteLines.join('<br>')}</blockquote>`);
+        blockquoteLines = [];
+        inBlockquote = false;
+      }
       if (inList) { html.push(`</${inList}>`); inList = false; }
       const title = line.replace(/^### (.*)/, '$1');
       html.push(`<h3>${title}</h3>`);
@@ -76,6 +94,11 @@ function mdToHtml(markdown) {
 
     // Lists
     if (line.match(/^- (.*)/)) {
+      if (inBlockquote) {
+        html.push(`<blockquote>${blockquoteLines.join('<br>')}</blockquote>`);
+        blockquoteLines = [];
+        inBlockquote = false;
+      }
       if (!inList) { html.push('<ul>'); inList = 'ul'; }
       let content = line.replace(/^- (.*)/, '$1');
       content = content.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>');
@@ -86,6 +109,11 @@ function mdToHtml(markdown) {
     }
     // Ordered lists (1. 2. etc)
     if (line.match(/^\d+\. (.*)/)) {
+      if (inBlockquote) {
+        html.push(`<blockquote>${blockquoteLines.join('<br>')}</blockquote>`);
+        blockquoteLines = [];
+        inBlockquote = false;
+      }
       if (inList !== 'ol') { 
         if (inList) html.push(`</${inList}>`);
         html.push('<ol>'); 
@@ -100,12 +128,26 @@ function mdToHtml(markdown) {
     }
     if (inList) { html.push(`</${inList}>`); inList = false; }
 
-    // Blockquotes
+    // Blockquotes - collect consecutive lines
     if (line.startsWith('>')) {
       const content = line.replace(/^\u003e ?/, '');
-      html.push(`<blockquote>${content}</blockquote>`);
+      if (!inBlockquote) {
+        inBlockquote = true;
+        blockquoteLines = [];
+      }
+      blockquoteLines.push(content);
       continue;
     }
+
+    // Close any open blockquote before regular content
+    if (inBlockquote) {
+      html.push(`<blockquote>${blockquoteLines.join('<br>')}</blockquote>`);
+      blockquoteLines = [];
+      inBlockquote = false;
+    }
+
+    // Skip blank lines at start
+    if (isBlank) continue;
 
     // Horizontal rule
     if (line === '---') {
@@ -121,6 +163,10 @@ function mdToHtml(markdown) {
     html.push(`<p>${content}</p>`);
   }
 
+  // Close any open blockquote
+  if (inBlockquote) {
+    html.push(`<blockquote>${blockquoteLines.join('<br>')}</blockquote>`);
+  }
   if (inList) html.push(`</${inList}>`);
   return html.join('\n');
 }
