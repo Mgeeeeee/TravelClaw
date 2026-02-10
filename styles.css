@@ -201,6 +201,11 @@ body {
   line-height: 1.9;
 }
 
+::selection {
+  background: var(--accent-soft);
+  color: var(--ink);
+}
+
 .prose > * + * {
   margin-top: 1.6em;
 }
@@ -212,6 +217,7 @@ body {
   margin-top: 2.5em;
   margin-bottom: 0.8em;
   letter-spacing: -0.01em;
+  color: var(--accent); /* 标题也带点绿 */
 }
 
 .prose h3 {
@@ -220,6 +226,7 @@ body {
   font-weight: 500;
   margin-top: 2em;
   margin-bottom: 0.6em;
+  color: var(--accent);
 }
 
 .prose p {
@@ -230,44 +237,64 @@ body {
   color: var(--accent);
   text-decoration: none;
   border-bottom: 1px solid var(--accent-soft);
-  transition: border-color 0.3s ease;
+  font-weight: 500;
+  transition: all 0.3s ease;
 }
 
 .prose a:hover {
   border-color: var(--accent);
+  background: var(--accent-soft);
 }
 
-/* 列表样式 - 修复双圆点 */
+/* 列表样式 - 统一绿色 */
 .prose ul, .prose ol {
   padding-left: 1.2em;
   margin: 1.5em 0;
 }
 
 .prose ul {
-  list-style-type: disc;
+  list-style: none;
+}
+
+.prose ul > li {
+  position: relative;
+  padding-left: 1.2em;
+}
+
+.prose ul > li::before {
+  content: '•';
+  position: absolute;
+  left: 0;
+  color: var(--accent);
+  font-weight: bold;
 }
 
 .prose ol {
   list-style-type: decimal;
 }
 
+.prose ol > li::marker {
+  color: var(--accent);
+  font-weight: 600;
+}
+
 .prose li {
   margin: 0.5em 0;
-  padding-left: 0.2em;
 }
 
 /* 引用样式 - 简洁竖线 */
 .prose blockquote {
-  margin: 2em 0;
-  padding: 0.8em 1.2em;
+  margin: 2.5em 0;
+  padding: 1em 1.5em;
   border-left: 4px solid var(--accent);
-  background: transparent;
+  background: var(--accent-soft); /* 加个超淡背景，呼应一下 */
   color: var(--muted);
   font-style: italic;
+  border-radius: 0 4px 4px 0;
 }
 
 .prose blockquote::before {
-  content: none; /* 彻底移除引号装饰 */
+  content: none; 
 }
 
 /* 表格样式 - 结构清晰 */
@@ -280,15 +307,16 @@ body {
 }
 
 .prose th {
-  background: var(--bg);
+  background: var(--accent-soft); /* 表头也用绿色系 */
   font-weight: 600;
   text-align: left;
   padding: 12px 16px;
-  border-bottom: 2px solid var(--line);
+  border-bottom: 2px solid var(--accent); /* 表头底线加深 */
   font-family: "Inter", sans-serif;
   text-transform: uppercase;
   font-size: 12px;
   letter-spacing: 0.05em;
+  color: var(--accent);
 }
 
 .prose td {
@@ -323,8 +351,22 @@ body {
 
 .prose hr {
   border: none;
-  border-top: 1px solid var(--line);
-  margin: 3em 0;
+  height: 1px;
+  background: linear-gradient(to right, transparent, var(--accent), transparent);
+  margin: 4em 0;
+  position: relative;
+}
+
+.prose hr::after {
+  content: '✧';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background: var(--bg);
+  padding: 0 10px;
+  color: var(--accent);
+  font-size: 14px;
 }
 
 /* ===== Footer ===== */
