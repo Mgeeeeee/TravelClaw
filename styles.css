@@ -334,10 +334,22 @@ body {
 
 .prose code {
   font-family: "JetBrains Mono", monospace;
-  font-size: 0.9em;
-  background: var(--line);
-  padding: 0.15em 0.4em;
+  font-size: 0.85em;
+  background: var(--accent-soft);
+  color: var(--accent);
+  padding: 0.2em 0.4em;
   border-radius: 4px;
+}
+
+/* 强调样式 */
+.prose strong {
+  font-weight: 600;
+  color: #2d4a2b; /* 深墨绿，更有力 */
+}
+
+.prose em {
+  font-style: italic;
+  color: var(--muted);
 }
 
 .prose pre {
@@ -347,6 +359,13 @@ body {
   border: 1px solid var(--line);
   overflow-x: auto;
   margin: 2em 0;
+  box-shadow: var(--shadow);
+}
+
+.prose pre code {
+  background: transparent;
+  padding: 0;
+  color: var(--ink);
 }
 
 .prose hr {
