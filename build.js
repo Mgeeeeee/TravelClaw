@@ -34,6 +34,8 @@ function mdToHtml(markdown) {
   let codeContent = [];
   let inBlockquote = false;
   let blockquoteLines = [];
+  let inTable = false;
+  let tableRows = [];
 
   for (let i = 0; i < lines.length; i++) {
     let line = lines[i];
@@ -58,34 +60,51 @@ function mdToHtml(markdown) {
     // Track blank lines for paragraph separation
     let isBlank = line.trim() === '';
 
-    // Headers (skip H1 as it's the title)
-    if (line.match(/^# (.*)/)) {
-      // Close open blockquote first
-      if (inBlockquote) {
-        html.push(`<blockquote>${blockquoteLines.join('<br>')}</blockquote>`);
-        blockquoteLines = [];
-        inBlockquote = false;
-      }
-      if (inList) { html.push(`</${inList}>`); inList = false; }
+    // Table detection
+    if (line.trim().startsWith('|')) {
+      inTable = true;
+      tableRows.push(line.trim());
       continue;
-    }
-    if (line.match(/^## (.*)/)) {
-      if (inBlockquote) {
-        html.push(`<blockquote>${blockquoteLines.join('<br>')}</blockquote>`);
-        blockquoteLines = [];
-        inBlockquote = false;
+    } else if (inTable) {
+      // Process the accumulated table
+      if (tableRows.length >= 2) {
+        let tableHtml = '<table>';
+        // Header columns extraction
+        let headerCols = tableRows[0].split('|').map(c => c.trim()).filter((c, i, arr) => i > 0 && i < arr.length - 1);
+        
+        tableHtml += '<thead><tr>';
+        headerCols.forEach(col => {
+          tableHtml += `<th>${inlineStyles(col)}</th>`;
+        });
+        tableHtml += '</tr></thead><tbody>';
+
+        // Body (skip header [0] and separator [1])
+        for (let j = 2; j < tableRows.length; j++) {
+          let rowCols = tableRows[j].split('|').map(c => c.trim()).filter((c, i, arr) => i > 0 && i < arr.length - 1);
+          tableHtml += '<tr>';
+          rowCols.forEach(col => {
+            tableHtml += `<td>${inlineStyles(col)}</td>`;
+          });
+          tableHtml += '</tr>';
+        }
+        tableHtml += '</tbody></table>';
+        html.push(tableHtml);
       }
+      tableRows = [];
+      inTable = false;
+      if (isBlank) continue;
+    }
+
+    // Headers
+    if (line.match(/^## (.*)/)) {
+      if (inBlockquote) { html.push(`<blockquote>${blockquoteLines.join('<br>')}</blockquote>`); blockquoteLines = []; inBlockquote = false; }
       if (inList) { html.push(`</${inList}>`); inList = false; }
       const title = line.replace(/^## (.*)/, '$1');
       html.push(`<h2>${title}</h2>`);
       continue;
     }
     if (line.match(/^### (.*)/)) {
-      if (inBlockquote) {
-        html.push(`<blockquote>${blockquoteLines.join('<br>')}</blockquote>`);
-        blockquoteLines = [];
-        inBlockquote = false;
-      }
+      if (inBlockquote) { html.push(`<blockquote>${blockquoteLines.join('<br>')}</blockquote>`); blockquoteLines = []; inBlockquote = false; }
       if (inList) { html.push(`</${inList}>`); inList = false; }
       const title = line.replace(/^### (.*)/, '$1');
       html.push(`<h3>${title}</h3>`);
@@ -94,81 +113,56 @@ function mdToHtml(markdown) {
 
     // Lists
     if (line.match(/^- (.*)/)) {
-      if (inBlockquote) {
-        html.push(`<blockquote>${blockquoteLines.join('<br>')}</blockquote>`);
-        blockquoteLines = [];
-        inBlockquote = false;
-      }
+      if (inBlockquote) { html.push(`<blockquote>${blockquoteLines.join('<br>')}</blockquote>`); blockquoteLines = []; inBlockquote = false; }
       if (!inList) { html.push('<ul>'); inList = 'ul'; }
       let content = line.replace(/^- (.*)/, '$1');
-      content = content.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>');
-      content = content.replace(/\*([^*]+)\*/g, '<em>$1</em>');
-      content = content.replace(/\[([^\]]+)\]\(([^)]+)\)/g, "<a href='$2'>$1</a>");
-      html.push(`<li>${content}</li>`);
+      html.push(`<li>${inlineStyles(content)}</li>`);
       continue;
     }
-    // Ordered lists (1. 2. etc)
     if (line.match(/^\d+\. (.*)/)) {
-      if (inBlockquote) {
-        html.push(`<blockquote>${blockquoteLines.join('<br>')}</blockquote>`);
-        blockquoteLines = [];
-        inBlockquote = false;
-      }
+      if (inBlockquote) { html.push(`<blockquote>${blockquoteLines.join('<br>')}</blockquote>`); blockquoteLines = []; inBlockquote = false; }
       if (inList !== 'ol') { 
         if (inList) html.push(`</${inList}>`);
-        html.push('<ol>'); 
-        inList = 'ol'; 
+        html.push('<ol>'); inList = 'ol'; 
       }
       let content = line.replace(/^\d+\. (.*)/, '$1');
-      content = content.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>');
-      content = content.replace(/\*([^*]+)\*/g, '<em>$1</em>');
-      content = content.replace(/\[([^\]]+)\]\(([^)]+)\)/g, "<a href='$2'>$1</a>");
-      html.push(`<li>${content}</li>`);
+      html.push(`<li>${inlineStyles(content)}</li>`);
       continue;
     }
     if (inList) { html.push(`</${inList}>`); inList = false; }
 
-    // Blockquotes - collect consecutive lines
+    // Blockquotes
     if (line.startsWith('>')) {
       const content = line.replace(/^\u003e ?/, '');
-      if (!inBlockquote) {
-        inBlockquote = true;
-        blockquoteLines = [];
-      }
-      blockquoteLines.push(content);
+      if (!inBlockquote) { inBlockquote = true; blockquoteLines = []; }
+      blockquoteLines.push(inlineStyles(content));
       continue;
     }
-
-    // Close any open blockquote before regular content
     if (inBlockquote) {
       html.push(`<blockquote>${blockquoteLines.join('<br>')}</blockquote>`);
-      blockquoteLines = [];
-      inBlockquote = false;
+      blockquoteLines = []; inBlockquote = false;
     }
 
-    // Skip blank lines at start
     if (isBlank) continue;
 
     // Horizontal rule
-    if (line === '---') {
-      html.push('<hr>');
-      continue;
-    }
+    if (line === '---') { html.push('<hr>'); continue; }
 
     // Paragraphs
-    let content = line;
-    content = content.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>');
-    content = content.replace(/\*([^*]+)\*/g, '<em>$1</em>');
-    content = content.replace(/\[([^\]]+)\]\(([^)]+)\)/g, "<a href='$2'>$1</a>");
-    html.push(`<p>${content}</p>`);
+    html.push(`<p>${inlineStyles(line)}</p>`);
   }
 
-  // Close any open blockquote
-  if (inBlockquote) {
-    html.push(`<blockquote>${blockquoteLines.join('<br>')}</blockquote>`);
-  }
+  if (inBlockquote) html.push(`<blockquote>${blockquoteLines.join('<br>')}</blockquote>`);
   if (inList) html.push(`</${inList}>`);
   return html.join('\n');
+}
+
+function inlineStyles(text) {
+  return text
+    .replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>')
+    .replace(/\*([^*]+)\*/g, '<em>$1</em>')
+    .replace(/\[([^\]]+)\]\(([^)]+)\)/g, "<a href='$2'>$1</a>")
+    .replace(/`([^`]+)`/g, "<code>$1</code>");
 }
 
 // Format date
