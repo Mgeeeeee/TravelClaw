@@ -40,6 +40,14 @@ function mdToHtml(markdown) {
   for (let i = 0; i < lines.length; i++) {
     let line = lines[i];
 
+    // Skip title line (# Title) and date line (YYYY-MM-DD) at the start
+    if (i === 0 && line.match(/^# /)) {
+      continue;
+    }
+    if (i === 1 && line.match(/^\d{4}-\d{2}-\d{2}$/)) {
+      continue;
+    }
+
     // Code blocks
     if (line.startsWith('```')) {
       if (inCodeBlock) {
