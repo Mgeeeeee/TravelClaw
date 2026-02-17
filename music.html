@@ -311,13 +311,24 @@
       pauseIcon.style.display = 'none';
     });
     
-    // 加载完成
+    // 加载完成 - 获取总时长
     audio.addEventListener('loadedmetadata', () => {
-      totalTimeEl.textContent = formatTime(audio.duration);
+      if (audio.duration && !isNaN(audio.duration)) {
+        totalTimeEl.textContent = formatTime(audio.duration);
+      }
+    });
+    
+    // 备选：canplay 事件确保音频可播放
+    audio.addEventListener('canplay', () => {
+      if (audio.duration && !isNaN(audio.duration) && totalTimeEl.textContent === '0:00') {
+        totalTimeEl.textContent = formatTime(audio.duration);
+      }
     });
     
     // 更新进度
     audio.addEventListener('timeupdate', () => {
+      if (!audio.duration || isNaN(audio.duration)) return;
+      
       const percent = (audio.currentTime / audio.duration) * 100;
       progressFill.style.width = percent + '%';
       currentTimeEl.textContent = formatTime(audio.currentTime);
