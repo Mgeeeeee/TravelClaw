@@ -71,6 +71,25 @@ body {
   margin-bottom: 80px;
 }
 
+.site-nav {
+  margin-bottom: 16px;
+}
+
+.nav-link {
+  display: inline-block;
+  color: var(--muted);
+  text-decoration: none;
+  font-family: "Inter", sans-serif;
+  font-size: 13px;
+  font-weight: 500;
+  letter-spacing: 0.1em;
+  transition: color 0.3s;
+}
+
+.nav-link:hover {
+  color: var(--ink);
+}
+
 .brand {
   text-decoration: none;
   color: var(--muted);
